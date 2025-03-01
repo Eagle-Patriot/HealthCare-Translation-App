@@ -66,7 +66,7 @@ elif choice == "Login":
                 if st.button("🔍 Transcribe"):
                     with st.spinner("Transcribing... ⏳"):
                         files = {"file": ("audio.mp3", uploaded_file.getvalue(), "audio/mpeg")}
-                        response = requests.post("http://0.0.0.0:8000/transcribe/", files=files)
+                        response = requests.post("https://healthcare-translation-app-0isa.onrender.com/transcribe/", files=files)
                         transcript = response.json().get("transcript", "Error transcribing")
                     
                     st.success("✅ Transcription Complete!")
@@ -75,7 +75,7 @@ elif choice == "Login":
                     # Translation Section
                     st.subheader("🌍 Translation")
                     with st.spinner("Translating... 🔄"):
-                        translate_response = requests.post("http://0.0.0.0:8000/translate/", json={"text": transcript, "target_lang": target_lang})
+                        translate_response = requests.post("https://healthcare-translation-app-0isa.onrender.com/translate/", json={"text": transcript, "target_lang": target_lang})
                         translation = translate_response.json().get("translation", "Error translating")
 
                     st.success("✅ Translation Complete!")
@@ -86,11 +86,11 @@ elif choice == "Login":
                 if st.button("🔊 Speak"):
                     with st.spinner("Generating Speech... 🔊"):
                         files = {"file": ("audio.mp3", uploaded_file.getvalue(), "audio/mpeg")}
-                        response = requests.post("http://0.0.0.0:8000/transcribe/", files=files)
+                        response = requests.post("https://healthcare-translation-app-0isa.onrender.com/transcribe/", files=files)
                         transcript = response.json().get("transcript", "Error transcribing")
-                        trans = requests.post("http://0.0.0.0:8000/translate/", json={"text": transcript, "target_lang": target_lang})
+                        trans = requests.post("https://healthcare-translation-app-0isa.onrender.com/translate/", json={"text": transcript, "target_lang": target_lang})
                         translayed = trans.json().get("translation", "Error translating")
-                        audio_response = requests.get(f"http://0.0.0.0:8000/speak/?text={translayed}")
+                        audio_response = requests.get(f"https://healthcare-translation-app-0isa.onrender.com/speak/?text={translayed}")
                         with open("output.mp3", "wb") as f:
                             f.write(audio_response.content)
                             
