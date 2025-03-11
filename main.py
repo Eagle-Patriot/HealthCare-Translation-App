@@ -25,15 +25,6 @@ app.add_middleware(
 
 @app.post("/transcribe/")
 async def transcribe_audio(file: UploadFile = File(...)):
-    """
-    Transcribes an audio file using OpenAI Whisper API with optimized prompt engineering.
-
-    Args:
-        file (UploadFile): The audio file to transcribe. Supported formats: MP3, WAV, FLAC, etc.
-
-    Returns:
-        dict: A dictionary containing the transcript or an error message.
-    """
     try:
         # Save the uploaded file temporarily
         file_path = f"temp_{file.filename}"
@@ -60,16 +51,6 @@ async def transcribe_audio(file: UploadFile = File(...)):
 
 @app.post("/translate/")
 async def translate_text(request: TranslateRequest):
-    """
-    Translates text from any language to the target language using OpenAI's GPT-4 model.
-
-    Args:
-        text (str): The text to translate.
-        target_lang (str): The ISO 639-1 language code of the target language (e.g., "es" for Spanish, "fr" for French).
-
-    Returns:
-        dict: A dictionary containing the translation.  Returns an error message if something goes wrong.
-    """
     try:
         text = request.text
         target_lang = request.target_lang
@@ -86,8 +67,8 @@ async def translate_text(request: TranslateRequest):
                 """
                 }
             ],
-            temperature=0.2, # Lower temperature for more consistent results
-            max_tokens=500  # Adjust as needed
+            temperature=0.2, 
+            max_tokens=500 
         )
 
         translation = response.choices[0].message.content.strip()
@@ -102,27 +83,14 @@ async def translate_text(request: TranslateRequest):
             )
 
     except Exception as e:
-        print(f"Translation error: {e}") # Log the error for debugging
+        print(f"Translation error: {e}")
         raise HTTPException(status_code=500, detail=f"Translation failed: {str(e)}")
 
 
 @app.get("/speak/")
 async def text_to_speech(text: str, filename: str = "speech.mp3"):
-    """
-    Converts text to speech using OpenAI's Text-to-Speech API.
-
-    Args:
-        text (str): The text to convert to speech.
-        filename (str): The name of the output audio file. Defaults to "speech.mp3".
-
-    Returns:
-        FileResponse: An MP3 file containing the synthesized speech.
-
-    Raises:
-        HTTPException: If there's an error during text-to-speech conversion.
-    """
     try:
-        print(f"Received TTS request: {text}")  # ✅ Debugging log
+        print(f"Received TTS request: {text}")
         # Create a temporary file path
         temp_dir = tempfile.gettempdir()
         speech_file_path = Path(temp_dir) / filename
@@ -130,7 +98,7 @@ async def text_to_speech(text: str, filename: str = "speech.mp3"):
         # Generate speech using OpenAI API
         response = openai.audio.speech.create(
             model="tts-1",
-            voice="alloy",  # Change voice if needed (alloy, echo, fable, onyx, nova, shimmer)
+            voice="alloy",
             input= text
         )
 
@@ -142,6 +110,3 @@ async def text_to_speech(text: str, filename: str = "speech.mp3"):
     except Exception as e:
         print(f"Text-to-speech error: {e}")
         raise HTTPException(status_code=500, detail=f"Text-to-speech conversion failed: {str(e)}")
-
-
-
