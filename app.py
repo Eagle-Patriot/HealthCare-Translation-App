@@ -39,14 +39,13 @@ elif choice == "Login":
     username = st.text_input("User Name")
     password = st.text_input("Password", type='password')
     if st.checkbox("Login"):
-        create_usertable()
+        # create_usertable()
         result = login_user(username,password)
         if result:
             st.success(f"Logged In as {username}")
             
             # Language Selection
             st.subheader("Language Selection")
-            source_lang = st.selectbox("Select Input Language", ["English (en)", "French (fr)", "Spanish (es)", "German (de)"])
             target_lang = st.selectbox("Select Output Language", ["French (fr)", "Spanish (es)", "German (de)","English (en)"])
 
             # Initialize session state variables
@@ -58,6 +57,7 @@ elif choice == "Login":
             # File Upload
             st.subheader("🎤 Upload Your Audio")
             uploaded_file = st.file_uploader("Choose a WAV or MP3 file", type=["wav", "mp3"])
+            
             st.sidebar.title("Welcome")
             st.sidebar.title("Instructions")
             st.sidebar.markdown("1. Upload an audio file.")
