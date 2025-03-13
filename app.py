@@ -39,7 +39,7 @@ elif choice == "Login":
     username = st.text_input("User Name")
     password = st.text_input("Password", type='password')
     if st.checkbox("Login"):
-        # create_usertable()
+        create_usertable()
         result = login_user(username,password)
         if result:
             st.success(f"Logged In as {username}")
