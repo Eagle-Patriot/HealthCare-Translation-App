@@ -75,9 +75,9 @@ elif choice == "Login":
                         files = {"file": ("audio.mp3", uploaded_file.getvalue(), "audio/mpeg")}
                         response = requests.post("https://healthcare-translation-app-0isa.onrender.com/transcribe/", files=files)
                         transcript = response.json().get("transcript", "Error transcribing")
+                        st.session_state["transcript"] = transcript
 
                     st.success("Transcription Complete!")
-                    st.text_area("Transcription", transcript)
                     st.session_state["transcript"] = transcript
 
             # Live Audio Recording Section
@@ -94,8 +94,12 @@ elif choice == "Login":
                         transcript = response.json().get("transcript", "Error transcribing")
 
                     st.success("Transcription Complete!")
-                    st.text_area("Transcription", transcript)
+                    st.text_area("Transcription", transcript, disabled=False)
                     st.session_state["transcript"] = transcript
+            
+            if "transcript" in st.session_state and st.session_state["transcript"]:
+                st.subheader("Transcription")
+                st.markdown(st.session_state["transcript"])
 
             #Translation Section (Only enable if transcription is done)
             if st.session_state["transcript"]:
@@ -107,10 +111,14 @@ elif choice == "Login":
                             json={"text": st.session_state["transcript"], "target_lang": target_lang}
                         )
                         translation = translate_response.json().get("translation", "Error translating")
+                        st.session_state["translation"] = translation
 
                     st.success("Translation Complete!")
                     st.text_area("Translated Text", translation)
                     st.session_state["translation"] = translation
+            
+            if "translation" in st.session_state and st.session_state["translation"]:
+                    st.markdown(st.session_state["translation"])
 
             #Text-to-Speech Section (Only enable if translation is done)
             if st.session_state["translation"] and st.button("🔊 Speak"):
